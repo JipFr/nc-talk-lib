@@ -17,10 +17,12 @@ client.on("message", (evt: Message) => {
 
 	if(evt.content.toLowerCase().startsWith("zeg:")) {
 		let txt = evt.content.slice(4).trim()
-		evt.reply(txt);
+		evt.channel.send(txt);
 	}
 
-
+	if(evt.content.toLowerCase() === "ping") {
+		evt.reply("Pong!");
+	}
 
 });
 

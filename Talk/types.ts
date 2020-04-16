@@ -54,8 +54,16 @@ export class Message {
 
 	// Reply to someone
 	public async reply(input: string | SendOptions) {
+		
+		if(typeof input === "string") {
+			input = {
+				content: input
+			}
+		}
+		
+
 		this.channel.send({
-			content: this.content.slice(4).trim(),
+			content: input.content,
 			quote: this.id
 		});
 	}
