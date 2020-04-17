@@ -1,5 +1,5 @@
 
-import Talk from "./main.ts";
+import Talk from "./mod.ts";
 
 /*
  * Other
@@ -46,7 +46,10 @@ export class Message {
 		this.parameters = parameters;
 		this.isReplyable = isReplyable;
 
-		this.author = knownPeople[authorId] || null;
+		this.author = knownPeople[authorId] || { name: "Unknown factor", id: "u.factor", type: 0 };
+		if(!knownPeople[authorId]) {
+			console.log(knownPeople, authorId);
+		}
 		this.quoted = quoted;
 		this.channel = channel;
 
@@ -155,6 +158,8 @@ export class Channel {
 				content: input
 			}
 		}
+
+		input.content = input.content.replace(/\//g, "|"); // Commands are weird in this, this is the best I can come up with 
 
 		let messageForm = new FormData();
 		messageForm.append("message", input.content);

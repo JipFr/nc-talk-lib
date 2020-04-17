@@ -3,7 +3,7 @@ import { catYou } from 'https://deno.land/x/cat_you/mod.ts';
 import { config } from "https://deno.land/x/dotenv/dotenv.ts";
 const env = config();
 
-import Talk, { Message } from "./Talk/main.ts";
+import Talk, { Message } from "./mod.ts";
 
 const client = new Talk(env.URL);
 
