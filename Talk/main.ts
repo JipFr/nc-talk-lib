@@ -59,7 +59,7 @@ export default class Talk {
 		await this.updateRooms();
 		setTimeout(() => {
 			this.loop();
-		}, 5e3);
+		}, 2e3);
 	}
 
 	// Check for new messages
