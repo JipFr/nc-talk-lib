@@ -15,11 +15,12 @@ const env = config();
 import Talk from "./Talk/main.ts";
 import { Message } from "./Talk/types.ts";
 
-const client = new Talk(env["URL"]);
+const client = new Talk(env.URL);
 
 client.on("message", (evt: Message) => {
 	console.log(`${evt.author.name}: ${evt.content}`);
 });
 
-client.login(env["USERNAME"], env["PASSWORD"]);
-client.start();```
+client.login(env.USERNAME, env.PASSWORD);
+client.start();
+```

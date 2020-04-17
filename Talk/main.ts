@@ -3,6 +3,7 @@ import * as base64 from "https://denopkg.com/chiefbiiko/base64/mod.ts";
 
 import { Message, Author, PeopleObject, Channel } from "./types.ts";
 
+
 const startDate = Date.now();
 
 
@@ -17,6 +18,7 @@ class Event {
 
 }
 
+export { Message, Author, PeopleObject, Channel };
 export default class Talk {
 	public people: PeopleObject;
 	public url: string;
@@ -24,12 +26,16 @@ export default class Talk {
 	public channels: Channel[] = [];
 	private lastMessageTimes: any;
 	private events: Event[] = [];
+	private userId: string | number;
+	public user?: Author;
+
 
 	constructor(url: string) {
 
 		this.url = url;
 		this.lastMessageTimes = {};
 		this.people = {};
+		this.userId = -1;
 		this.headers = {
 			"Ocs-Apirequest": "true",
 			"Accept": "application/json, text/plain, */*"
@@ -39,6 +45,7 @@ export default class Talk {
 	// Login function to set credentials
 	public login(username: string, password: string) {
 		let usernamePassword = `${username}:${password}`;
+		this.userId = username;
 		this.headers.Authorization = `Basic ${base64.fromUint8Array(new TextEncoder().encode(usernamePassword))}` 
 	}
 
@@ -77,6 +84,10 @@ export default class Talk {
 					id: personId,
 					type: participant.type
 				});
+
+				if(this.people[this.userId]) {
+					this.user = this.people[this.userId];
+				}
 
 			});
 
