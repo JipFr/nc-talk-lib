@@ -12,8 +12,7 @@ A basic example of this would look like
 ```TypeScript
 import { config } from "https://deno.land/x/dotenv/dotenv.ts";
 const env = config();
-import Talk from "./Talk/main.ts";
-import { Message } from "./Talk/types.ts";
+import Talk, { Message } from "./Talk/main.ts";
 
 const client = new Talk(env.URL);
 
