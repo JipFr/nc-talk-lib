@@ -25,5 +25,7 @@ client.on("message", (evt: Message) => {
 });
 
 client.login(options.username, options.password);
-client.start();
+client.start().then(() => {
+	console.log("Started.");
+});
 ```
