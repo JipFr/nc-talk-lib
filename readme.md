@@ -10,16 +10,20 @@ To start, run `deno --allow-net --allow-read main.ts`
 
 A basic example of this would look like
 ```TypeScript
-import { config } from "https://deno.land/x/dotenv/dotenv.ts";
-const env = config();
 import Talk, { Message } from "./Talk/main.ts";
 
-const client = new Talk(env.URL);
+const options = {
+  username: "my.username",
+  password: "myPassword123",
+  url: "nc.mywebsite.com"
+};
+
+const client = new Talk(options.url);
 
 client.on("message", (evt: Message) => {
-	console.log(`${evt.author.name}: ${evt.content}`);
+    console.log(`${evt.author.name}: ${evt.content}`);
 });
 
-client.login(env.USERNAME, env.PASSWORD);
+client.login(options.username, options.password);
 client.start();
 ```
