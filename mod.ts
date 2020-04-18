@@ -34,7 +34,7 @@ interface TalkOptions {
 	password: string;
 }
 
-export { Message, Author, PeopleObject, Channel };
+export { Message, Author, PeopleObject, Channel } from "./types.ts";
 /**
  * Main talk class
  * @param people Cached people, followers PeopleObject interface
