@@ -5,7 +5,11 @@ const env = config();
 
 import Talk, { Message } from "./mod.ts";
 
-const client = new Talk(env.URL);
+const client = new Talk({
+	url: env.URL,
+	username: env.USERNAME,
+	password: env.PASSWORD
+});
 
 client.on("message", (evt: Message) => {
 	console.log(`${evt.author.name}: ${evt.content}`);
@@ -35,8 +39,6 @@ client.on("message", (evt: Message) => {
 
 });
 
-
-client.login(env.USERNAME, env.PASSWORD);
 client.start().then(() => {
 	console.log("Started");
 });

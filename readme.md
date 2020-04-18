@@ -18,13 +18,12 @@ const options = {
   url: "nc.mywebsite.com"
 };
 
-const client = new Talk(options.url);
+const client = new Talk(options);
 
 client.on("message", (evt: Message) => {
     console.log(`${evt.author.name}: ${evt.content}`);
 });
 
-client.login(options.username, options.password);
 client.start().then(() => {
 	console.log("Started.");
 });

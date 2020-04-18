@@ -18,6 +18,12 @@ class Event {
 
 }
 
+interface TalkOptions {
+	url: string;
+	username: string;
+	password: string;
+}
+
 export { Message, Author, PeopleObject, Channel };
 export default class Talk {
 	public people: PeopleObject;
@@ -30,7 +36,7 @@ export default class Talk {
 	public user?: Author;
 
 
-	constructor(url: string) {
+	constructor({ url, username, password }: TalkOptions) {
 
 		this.url = url;
 		this.lastMessageTimes = {};
@@ -40,13 +46,20 @@ export default class Talk {
 			"Ocs-Apirequest": "true",
 			"Accept": "application/json, text/plain, */*"
 		}
+
+		let usernamePassword = `${username}:${password}`;
+		this.userId = username;
+		this.headers.Authorization = `Basic ${base64.fromUint8Array(new TextEncoder().encode(usernamePassword))}`;
+
 	}
 
 	// Login function to set credentials
 	public login(username: string, password: string) {
+		console.log("Please don't use the login method anymore.");
+		// I'll remove this later, but give me a chance for now...
 		let usernamePassword = `${username}:${password}`;
 		this.userId = username;
-		this.headers.Authorization = `Basic ${base64.fromUint8Array(new TextEncoder().encode(usernamePassword))}` 
+		this.headers.Authorization = `Basic ${base64.fromUint8Array(new TextEncoder().encode(usernamePassword))}`;
 	}
 
 	// Start the constant checking and stuff...
