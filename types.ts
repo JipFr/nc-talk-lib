@@ -24,6 +24,17 @@ interface MessageOptions {
 	channel: Channel;
 }
 
+/**
+ * Message class
+ * @param id Message's sequential ID
+ * @param content Message's main content
+ * @param timestamp Date object for the creation time of the message, precise to the second
+ * @param author Message's author, adheres to Author class
+ * @param parameters Message parameters. Actors, mentioned people, etc.
+ * @param isReplyable Whether the message is replyable
+ * @param quoted Quoted message, can be void if no message was quoted
+ * @param channel Channel the message was posted in
+ */
 export class Message {
 
 	id: number;
@@ -55,7 +66,10 @@ export class Message {
 
 	}
 
-	// Reply to someone
+	/**
+	 * Quote and reply to a message
+	 * @param input Content to send
+	 */
 	public async reply(input: string | SendOptions) {
 		
 		if(typeof input === "string") {
@@ -64,7 +78,6 @@ export class Message {
 			}
 		}
 		
-
 		this.channel.send({
 			content: input.content,
 			quote: this.id
@@ -73,8 +86,11 @@ export class Message {
 
 }
 
-/*
+/**
  * Author types
+ * @param name author's name, "John Doe"
+ * @param id author's id, "j.doe"
+ * @param type author type
  */
 interface AuthorOptions {
 	name: string;
@@ -82,6 +98,12 @@ interface AuthorOptions {
 	type: number;
 }
 
+/**
+ * Author (often a user)
+ * @param name author's name, "John Doe"
+ * @param id author's id, "j.doe"
+ * @param type author type
+ */
 export class Author {
 	public name: string;
 	public id: string;
@@ -95,10 +117,9 @@ export class Author {
 
 }
 
-/* 
- * Channel types
+/**
+ * Passable options to Channel
  */
-
 interface ChannelOptions {
 	name: string;
 	token: string;
@@ -112,6 +133,19 @@ interface ChannelOptions {
 	unreadMention: boolean;
 }
 
+/**
+ * Channel class
+ * @param name Channel name
+ * @param token Channel token
+ * @param displayName Channel's display name
+ * @param readOnly Whether channel is read only
+ * @param hasCall Whether channel has call
+ * @param isFavorite Whether channel is a user favorite
+ * @param notificationLevel Level of notifications to be received
+ * @param unreadMessages Amount of unread messages
+ * @param unreadMention Whether there is an unread mention
+ * @param client Optional, the bot's client. Passed so that it can be used to send messages
+ */
 export class Channel {
 
 	public name: string;
@@ -123,7 +157,7 @@ export class Channel {
 	public isFavorite: boolean;
 	public notificationLevel: number;
 	public unreadMessages: number;
-	public 	unreadMention: boolean;
+	public unreadMention: boolean;
 	public client?: Talk; // I'd rather not do this, but idk if I have a choice
 
 	constructor({
@@ -150,7 +184,17 @@ export class Channel {
 		this.unreadMention = unreadMention;
 	}
 
-	// Send function, send message in channel
+	 /** 
+	 * Send a message in channel
+	 * 
+	 *     myChannel.send("Hello world!") 
+	 * or
+	 * 
+	 *     myChannel.send({
+	 *         content: "Hello world!",
+	 *         quote: myMessageId
+	 *     });
+	 */ 
 	public send(input: string | SendOptions) {
 
 		if(typeof input === "string") {
@@ -172,14 +216,19 @@ export class Channel {
 				body: messageForm
 			});
 		} else {
+			// Some more error handling might be nice...
 			console.log("NO CLIENT");
 		}
 
 	}
 
-
 }
 
+/**
+ * Message sending options
+ * @param content Main message content
+ * @param quote Optional, ID of message to quote
+ */
 interface SendOptions {
 	content: string;
 	quote?: number;

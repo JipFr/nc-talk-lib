@@ -6,7 +6,11 @@ import { Message, Author, PeopleObject, Channel } from "./types.ts";
 
 const startDate = Date.now();
 
-
+/**
+ * Event class
+ * @param type Event type to listen for
+ * @param callback Function to call when event is fired
+ */
 class Event {
 	type: string;
 	callback: Function;
@@ -18,6 +22,12 @@ class Event {
 
 }
 
+/**
+ * Options for the main Talk class
+ * @param url Nextcloud installation's URL
+ * @param username Nextcloud username
+ * @param password Nextcloud password
+ */
 interface TalkOptions {
 	url: string;
 	username: string;
@@ -25,6 +35,13 @@ interface TalkOptions {
 }
 
 export { Message, Author, PeopleObject, Channel };
+/**
+ * Main talk class
+ * @param people Cached people, followers PeopleObject interface
+ * @param url Nextcloud installation's URL
+ * @param headers Main request headers including authentication
+ * @param channels List of channels the account is part of
+ */
 export default class Talk {
 	public people: PeopleObject;
 	public url: string;
@@ -53,16 +70,9 @@ export default class Talk {
 
 	}
 
-	// Login function to set credentials
-	public login(username: string, password: string) {
-		console.log("Please don't use the login method anymore.");
-		// I'll remove this later, but give me a chance for now...
-		let usernamePassword = `${username}:${password}`;
-		this.userId = username;
-		this.headers.Authorization = `Basic ${base64.fromUint8Array(new TextEncoder().encode(usernamePassword))}`;
-	}
-
-	// Start the constant checking and stuff...
+	/**
+	 * Start listening for messages and other events
+	 */
 	public async start() {
 		await this.loop();
 	}
@@ -188,7 +198,11 @@ export default class Talk {
 	 * EVENTS
 	 */
 
-	// Create new event
+	/**
+	 * Create new event
+	 * @param type Event type to listen for. For example, `message`.
+	 * @param callback Callback function to fire when event is triggered
+	 */
 	public on(type: string, callback: Function) {
 		let event = new Event(type, callback);
 		this.events.push(event);
