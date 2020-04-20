@@ -11,6 +11,10 @@ const client = new Client({
 	password: env.PASSWORD
 });
 
+client.on("ready", (evt: Client) => {
+	console.log("The bot is ready and listening!");
+});
+
 client.on("message", (evt: Message) => {
 	console.log(`${evt.author.name}: ${evt.content}`);
 	

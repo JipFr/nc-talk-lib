@@ -75,6 +75,7 @@ export class Client {
 	 */
 	public async start() {
 		await this.loop();
+		this.emit("ready", this);
 	}
 
 	// Main loop
