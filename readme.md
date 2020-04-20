@@ -10,7 +10,7 @@ To start, run `deno --allow-net --allow-read main.ts`
 
 A basic example of this would look like
 ```TypeScript
-import { Client, Message } from "./Talk/main.ts";
+import { Client, Message } from "https://deno.land/x/talk_lib/mod.ts";
 
 const options = {
   username: "my.username",
