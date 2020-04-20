@@ -1,18 +1,16 @@
 
-import Talk from "./mod.ts";
+import { Client } from "./mod.ts";
 
-/*
- * Other
+/**
+ * Wrapper of people
  */
-
 export interface PeopleObject {
 	[key: string]: Author;
 }
 
-/*
- * Message types
+/**
+ * Message options, see Message class for definitions
  */
-
 interface MessageOptions {
 	content: string;
 	timestamp: number;
@@ -158,7 +156,7 @@ export class Channel {
 	public notificationLevel: number;
 	public unreadMessages: number;
 	public unreadMention: boolean;
-	public client?: Talk; // I'd rather not do this, but idk if I have a choice
+	public client?: Client; // I'd rather not do this, but idk if I have a choice
 
 	constructor({
 		name,

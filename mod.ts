@@ -42,7 +42,7 @@ export { Message, Author, PeopleObject, Channel } from "./types.ts";
  * @param headers Main request headers including authentication
  * @param channels List of channels the account is part of
  */
-export default class Talk {
+export class Client {
 	public people: PeopleObject;
 	public url: string;
 	public headers: any;

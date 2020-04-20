@@ -10,7 +10,7 @@ To start, run `deno --allow-net --allow-read main.ts`
 
 A basic example of this would look like
 ```TypeScript
-import Talk, { Message } from "./Talk/main.ts";
+import { Client, Message } from "./Talk/main.ts";
 
 const options = {
   username: "my.username",
@@ -18,7 +18,7 @@ const options = {
   url: "nc.mywebsite.com"
 };
 
-const client = new Talk(options);
+const client = new Client(options);
 
 client.on("message", (evt: Message) => {
     console.log(`${evt.author.name}: ${evt.content}`);

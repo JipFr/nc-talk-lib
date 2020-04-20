@@ -3,9 +3,9 @@ import { catYou } from 'https://deno.land/x/cat_you/mod.ts';
 import { config } from "https://deno.land/x/dotenv/dotenv.ts";
 const env = config();
 
-import Talk, { Message } from "./mod.ts";
+import { Client, Message } from "./mod.ts";
 
-const client = new Talk({
+const client = new Client({
 	url: env.URL,
 	username: env.USERNAME,
 	password: env.PASSWORD
