@@ -57,7 +57,7 @@ export class Message {
 
 		this.author = knownPeople[authorId] || { name: "Unknown factor", id: "u.factor", type: 0 };
 		if(!knownPeople[authorId]) {
-			console.log(knownPeople, authorId);
+			// console.log(knownPeople, authorId, -1);
 		}
 		this.quoted = quoted;
 		this.channel = channel;
@@ -129,6 +129,7 @@ interface ChannelOptions {
 	notificationLevel: number;
 	unreadMessages: number;
 	unreadMention: boolean;
+	lastMessage: any;
 }
 
 /**
@@ -143,6 +144,7 @@ interface ChannelOptions {
  * @param unreadMessages Amount of unread messages
  * @param unreadMention Whether there is an unread mention
  * @param client Optional, the bot's client. Passed so that it can be used to send messages
+ * @param lastMessage Last message in channel
  */
 export class Channel {
 
@@ -157,6 +159,7 @@ export class Channel {
 	public unreadMessages: number;
 	public unreadMention: boolean;
 	public client?: Client; // I'd rather not do this, but idk if I have a choice
+	public lastMessage: any;
 
 	constructor({
 		name,
@@ -168,8 +171,9 @@ export class Channel {
 		isFavorite,
 		notificationLevel,
 		unreadMessages,
-		unreadMention
-	}: ChannelOptions) {
+		unreadMention,
+		lastMessage,
+	}: ChannelOptions, client: Client | undefined = undefined) {
 		this.name = name;
 		this.token = token;
 		this.displayName = displayName;
@@ -180,6 +184,8 @@ export class Channel {
 		this.notificationLevel = notificationLevel;
 		this.unreadMessages = unreadMessages;
 		this.unreadMention = unreadMention;
+		this.lastMessage = lastMessage;
+		this.client = client ?? undefined;
 	}
 
 	 /** 
@@ -218,6 +224,29 @@ export class Channel {
 			console.log("NO CLIENT");
 		}
 
+	}
+
+	public async fetchMessages() {
+		if(this.client) {
+			let data = await (await fetch(
+				`https://${this.client.url}/ocs/v2.php/apps/spreed/api/v1/chat/${this.token}?lookIntoFuture=0&includeLastKnown=1`,
+				{
+					headers: this.client.headers
+				}
+			)).json();
+
+			let people = this.client?.people ?? {};
+			let msgs = data.ocs.data;
+			let messages: Message[] = msgs.map((msg: any) => this.client?.toMessage(msg));
+
+			for(let msg of messages) {
+				msg.channel = this;
+			}
+
+			return messages;
+		} else {
+			return [];
+		}
 	}
 
 }

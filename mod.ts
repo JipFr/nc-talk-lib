@@ -30,8 +30,9 @@ class Event {
  */
 interface TalkOptions {
 	url: string;
-	username: string;
-	password: string;
+	username?: string;
+	password?: string;
+	encoded?: string;
 }
 
 export { Message, Author, PeopleObject, Channel } from "./types.ts";
@@ -53,7 +54,7 @@ export class Client {
 	public user?: Author;
 
 
-	constructor({ url, username, password }: TalkOptions) {
+	constructor({ url, username, password, encoded }: TalkOptions) {
 
 		this.url = url;
 		this.lastMessageTimes = {};
@@ -65,8 +66,14 @@ export class Client {
 		}
 
 		let usernamePassword = `${username}:${password}`;
-		this.userId = username;
-		this.headers.Authorization = `Basic ${base64.fromUint8Array(new TextEncoder().encode(usernamePassword))}`;
+		
+		let encodedAuth = password ? `Basic ${base64.fromUint8Array(new TextEncoder().encode(usernamePassword))}` : `Basic ${encoded}`;
+		let b64 = encodedAuth.split(" ").pop();
+		if(b64) {
+			let stuff = new TextDecoder("utf-8").decode(base64.toUint8Array(b64)) || "Unknown";
+			this.userId = stuff.split(":")[0];
+			this.headers.Authorization = encodedAuth;
+		}
 
 	}
 
@@ -122,7 +129,7 @@ export class Client {
 				await this.updateRoom(room);
 			}
 
-			let channel = new Channel(room);
+			let channel = new Channel(room, this);
 			this.channels.push(channel);
 
 		}
@@ -132,45 +139,34 @@ export class Client {
 	// Update specific room and emit messages
 	private async updateRoom(room: any) {
 		
-		let channel = new Channel(room);
-		let roomToken = room.token;
+		let channel = new Channel(room, this);
+		let messages = await channel.fetchMessages();
 
-		let data = await (await fetch(
-			`https://${this.url}/ocs/v2.php/apps/spreed/api/v1/chat/${roomToken}?lookIntoFuture=0&includeLastKnown=1`,
-			{
-				headers: this.headers
-			}
-		)).json();
-
-		let messages = data.ocs.data;
-		let lastMessageTime = this.getLastMessageTime(roomToken);
-		messages = messages.filter((msg: any) => lastMessageTime < (msg.timestamp * 1e3));
+		let lastMessageTime = this.getLastMessageTime(channel.token);
+		messages = messages.filter((msg: any) => lastMessageTime < (msg.timestamp));
 
 		for(let message of messages) {
-			channel.client = this;
-			message.channel = channel;
 			this.emitMessageEvent(message);
 		}
 
-		this.lastMessageTimes[roomToken] = Date.now();
+		this.lastMessageTimes[channel.token] = Date.now();
 	}
 
 	// Get an untypes message event
 	// type it, then emit the event
 	private emitMessageEvent(message: any) {
 		// First, we need to convert the message so it's actually a Message type
-		message = this.toMessage(message);
 		this.emit("message", message);
 		
 	}
 
 	// Convert untyped room to Channel
 	private toChannel(room: any): Channel | null {
-		return new Channel(room);
+		return new Channel(room, this);
 	}
 
 	// Convert untyped message object to Message
-	private toMessage(message: any): Message | void {
+	public toMessage(message: any): Message | void {
 
 		let quoted: Message | null | void = null;
 		if(message.parent) {
