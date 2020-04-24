@@ -245,6 +245,7 @@ export class Channel {
 
 			return messages;
 		} else {
+			console.log("No client;");				   	
 			return [];
 		}
 	}
