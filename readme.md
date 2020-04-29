@@ -1,5 +1,8 @@
 # Nextcloud Talk library in TypeScript for Deno
 
+[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/talk-lib/mod.ts)
+
+
 The purpose of this repository is to provide an easy way to make bots for Nextcloud Talk
 
 To set it up, copy `example.env` into `.env` and replace the values with the proper information.
