@@ -207,7 +207,7 @@ export class Channel {
 			}
 		}
 
-		input.content = input.content.replace(/\//g, "|"); // Commands are weird in this, this is the best I can come up with 
+		if(input.content.startsWith("/")) input.content = input.content.replace(/\//, "|"); // Commands are weird in this, this is the best I can come up with 
 
 		let messageForm = new FormData();
 		messageForm.append("message", input.content);
