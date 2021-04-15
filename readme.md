@@ -5,9 +5,11 @@
 
 The purpose of this repository is to provide an easy way to make bots for Nextcloud Talk
 
+## Example script
+
 To set it up, copy `example.env` into `.env` and replace the values with the proper information.
 
-To start, run `deno run --allow-net --allow-read mod.ts`
+To start, run `deno run --allow-net --allow-read example.ts`
 
 ## Basic example
 
