@@ -3,6 +3,9 @@ import * as base64 from "https://denopkg.com/chiefbiiko/base64/mod.ts";
 
 import { Message, Author, PeopleObject, Channel } from "./types.ts";
 
+export type { PeopleObject } from "./types.ts"
+export { Message, Author, Channel } from "./types.ts";
+
 
 const startDate = Date.now();
 
@@ -35,7 +38,6 @@ interface TalkOptions {
 	encoded?: string;
 }
 
-export { Message, Author, PeopleObject, Channel } from "./types.ts";
 /**
  * Main talk class
  * @param people Cached people, followers PeopleObject interface

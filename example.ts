@@ -1,6 +1,5 @@
 
-import { catYou } from 'https://deno.land/x/cat_you/mod.ts';
-import { config } from "https://deno.land/x/dotenv/dotenv.ts";
+import { config } from "https://deno.land/x/dotenv/mod.ts";
 const env = config();
 
 import { Client, Message } from "./mod.ts";
@@ -20,12 +19,6 @@ client.on("message", (evt: Message) => {
 	
 	if(evt.content === "zeg is") {
 		evt.channel.send("Hello!");
-	}
-
-	if(evt.content.toLowerCase().startsWith("cat ")) {
-		let txt = evt.content.slice(4).trim();
-		let catStr = catYou(txt).replace(/\\/g, "|");
-		evt.reply(catStr || "Niet gevonden");
 	}
 
 	if(evt.content.toLowerCase() === "yo" && evt.author.id !== client.user?.id) {
