@@ -97,32 +97,44 @@ export class Client {
 
 	// Check for new messages
 	private async updateRooms() {
-		let data = await (await fetch(
-			`https://${this.url}/ocs/v2.php/apps/spreed/api/v1/room`,
-			{
-				headers: this.headers
-			}
-		)).json();
-		let rooms = data.ocs.data;
+		let data;
+		try {
+			data = await (await fetch(
+				`https://${this.url}/ocs/v2.php/apps/spreed/api/v4/room`,
+				{
+					headers: this.headers
+				}
+			)).json();
+		} catch(err) {
+			this.emit("error", err);
+		}
+
+		let rooms: Channel[] = (data?.ocs || {}).data || [];
 
 		this.channels = [];
 
 		for(let room of rooms) {
 
-			Object.keys(room.participants).forEach((personId: string) => {
-				
-				let participant = room.participants[personId];
-				this.people[personId] = new Author({
-					name: participant.name,
-					id: personId,
-					type: participant.type
-				});
-
-				if(this.people[this.userId]) {
-					this.user = this.people[this.userId];
+			// Fetch participants
+			let participantData = await (await fetch(
+				`https://${this.url}/ocs/v2.php/apps/spreed/api/v4/room/${room.token}/participants`,
+				{
+					headers: this.headers
 				}
+			)).json();
 
-			});
+			const allPeople = participantData.ocs.data
+			for(let person of allPeople) {
+				this.people[person.actorId] = new Author({
+					id: person.actorId,
+					name: person.displayName,
+					type: person.actorType,
+				});
+			}
+
+			if(this.people[this.userId]) {
+				this.user = this.people[this.userId];
+			}
 
 			room.lastMessage.timestamp *= 1e3;
 
